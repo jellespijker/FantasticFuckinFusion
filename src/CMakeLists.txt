@@ -10,7 +10,7 @@ set(CMAKE_AUTOUIC ON)
 #        $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
 #        PRIVATE
 #        ${CMAKE_CURRENT_SOURCE_DIR}/src)
-
+#
 target_compile_options(fff PRIVATE -fPIC)
 
 target_include_directories(
