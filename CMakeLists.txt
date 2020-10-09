@@ -69,34 +69,20 @@ set(CONAN_EXTRA_REQUIRES
 set(CONAN_EXTRA_OPTIONS
         projectchrono:module_irrlicht=False
         qt:shared=False
-        qt:with_sqlite3=False
-        qt:with_odbc=False
-        qt:qtserialbus=False
-        qt:qtserialport=False
-        qt:qtwayland=False
-        qt:commercial=False
-        qt:qtandroidextras=False
-        qt:qtquicktimeline=False
-        qt:qtwebengine=False
-        qt:qtconnectivity=False
-        qt:qtwebsockets=False
-        qt:qtwebchannel=False
-        qt:qtwebview=False
-        qt:qtnetworkauth=False
-        qt:qtwebglplugin=False
-        qt:qtsensors=False
-        qt:qtremoteobjects=False
-        qt:qtnetworkauth=False
-        qt:qtvirtualkeyboard=False
-        qt:qtgamepad=False
-        qt:qtspeech=False
+        qt:qtsvg=True
         qt:qt3d=True
-        qt:qtquick3d=True
-        qt:qtquickcontrols2=True)
+        qt:qtimageformats=True
+        qt:qtquick3d=True)
 
 include(cmake/Conan.cmake)
+find_package(Qt5 REQUIRED COMPONENTS Core Gui Widgets 3DCore 3DExtras 3DRender 3DInput)
 set(QT_NO_BEARERMANAGEMENT ON)
+set(CMAKE_AUTOMOC ON)
+set(CMAKE_AUTORCC ON)
+set(CMAKE_AUTOUIC ON)
+
 run_conan()
+
 
 if(ENABLE_TESTING)
     enable_testing()

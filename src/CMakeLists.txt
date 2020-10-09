@@ -1,22 +1,10 @@
 add_executable(fff main.cpp)
 
-set(CMAKE_AUTOMOC ON)
-set(CMAKE_AUTORCC ON)
-set(CMAKE_AUTOUIC ON)
-
-#target_include_directories(fff
-#        PUBLIC
-#        $<INSTALL_INTERFACE:include>
-#        $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
-#        PRIVATE
-#        ${CMAKE_CURRENT_SOURCE_DIR}/src)
-#
 target_compile_options(fff PRIVATE -fPIC)
 
 target_include_directories(
         fff
         PRIVATE
-#            ${CONAN_INCLUDE_DIRS_PROJECTCHRONO}
             ${CONAN_INCLUDE_DIRS_QT})
 
 target_link_libraries(
@@ -24,6 +12,19 @@ target_link_libraries(
         PUBLIC
             CONAN_PKG::projectchrono
             CONAN_PKG::qt
+            Qt5::Core
+            Qt5::Gui
+            Qt5::Widgets
+            Qt5::3DCore
+            Qt5::3DExtras
+            Qt5::3DRender
+            Qt5::3DInput
         PRIVATE
             project_options
             project_warnings)
+
+qt_import_plugins(fff
+                  INCLUDE
+                    Qt::QTiffPlugin
+                    Qt::QGifPlugin
+                    Qt::QJpegPlugin)
