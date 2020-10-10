@@ -35,7 +35,7 @@ macro(run_conan)
             BASIC_SETUP
             CMAKE_TARGETS # individual targets to link to
             SETTINGS
-            compiler.cppstd=17
+            compiler.cppstd=20
             build_type=Release
             BUILD
             missing)

@@ -73,7 +73,10 @@ set(CONAN_EXTRA_OPTIONS
         qt:qtsvg=True
         qt:qt3d=True
         qt:qtimageformats=True
-        qt:qtquick3d=True)
+        qt:qtquick3d=True
+        qt:with_icu=False  # FIXME: gives error when compiling with C++20
+        qt:with_mysql=False  # FIXME: gives error when compiling with C++20
+        )
 
 include(cmake/Conan.cmake)
 find_package(Qt5 REQUIRED COMPONENTS Core Gui Widgets 3DCore 3DExtras 3DRender 3DInput)
