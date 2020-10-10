@@ -6,7 +6,7 @@
 #include <docopt/docopt.h>
 #include <range/v3/all.hpp>
 
-static const char USAGE[] =
+constexpr char USAGE[] =
   R"(FFF
 
      Usage:
