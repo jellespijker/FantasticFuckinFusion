@@ -1,17 +1,29 @@
-add_executable(fff main.cpp)
+add_executable(FantasticFuckinFusion main.cpp)
 
-target_compile_options(fff PRIVATE -fPIC)
+target_compile_options(
+        FantasticFuckinFusion
+        PRIVATE
+            -fPIC)
+
+target_compile_definitions(
+        FantasticFuckinFusion
+        PRIVATE
+            ${CONAN_COMPILE_DEFINITIONS_PROJECTCHRONO}
+            ${CONAN_COMPILE_DEFINITIONS_QT})
 
 target_include_directories(
-        fff
+        FantasticFuckinFusion
         PRIVATE
+            ${CONAN_INCLUDE_DIRS_SPDLOG}
+            ${CONAN_INCLUDE_DIRS_PROJECTCHRONO}
             ${CONAN_INCLUDE_DIRS_QT})
 
 target_link_libraries(
-        fff
+        FantasticFuckinFusion
         PUBLIC
             CONAN_PKG::projectchrono
             CONAN_PKG::qt
+            CONAN_PKG::spdlog
             Qt5::Core
             Qt5::Gui
             Qt5::Widgets
@@ -23,7 +35,7 @@ target_link_libraries(
             project_options
             project_warnings)
 
-qt_import_plugins(fff
+qt_import_plugins(FantasticFuckinFusion
                   INCLUDE
                     Qt::QTiffPlugin
                     Qt::QGifPlugin

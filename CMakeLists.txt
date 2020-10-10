@@ -65,7 +65,8 @@ set(CONAN_EXTRA_REQUIRES
         freetype/2.10.1
         fontconfig/2.13.91@jellespijker/testing
         qt/5.15.1@bincrafters/stable
-        projectchrono/5.0.1@jellespijker/testing)
+        projectchrono/5.0.1@jellespijker/testing
+        range-v3/0.11.0)
 set(CONAN_EXTRA_OPTIONS
         projectchrono:module_irrlicht=False
         qt:shared=False
@@ -96,3 +97,9 @@ if(ENABLE_FUZZING)
 endif()
 
 add_subdirectory(src)
+
+option(ENABLE_STANDALONE "Create a standalone instance" ON)
+if(ENABLE_STANDALONE)
+    message("Building FFF standalone program")
+    add_subdirectory(FFF)
+endif()

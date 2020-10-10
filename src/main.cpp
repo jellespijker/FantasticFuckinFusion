@@ -1,4 +1,5 @@
 #include <QGuiApplication>
+#include <spdlog/spdlog.h>
 
 #include <Qt3DCore/QEntity>
 #include <Qt3DCore/QTransform>
@@ -15,6 +16,7 @@
 
 Qt3DCore::QEntity* createTestScene()
 {
+  spdlog::info("creating test scene");
   Qt3DCore::QEntity* root = new Qt3DCore::QEntity;
   Qt3DCore::QEntity* torus = new Qt3DCore::QEntity(root);
 
@@ -39,6 +41,8 @@ Qt3DCore::QEntity* createTestScene()
 
 int main(int argc, char* argv[])
 {
+  spdlog::set_level(spdlog::level::debug);
+  spdlog::info("Starting main!");
   QGuiApplication app(argc, argv);
   Qt3DExtras::Qt3DWindow view;
   Qt3DCore::QEntity* scene = createTestScene();
