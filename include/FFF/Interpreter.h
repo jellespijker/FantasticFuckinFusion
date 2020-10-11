@@ -7,11 +7,11 @@
 
 namespace FFF {
 
-class [[maybe_unused]] Interpreter {
-
+class [[maybe_unused]] Interpreter
+{
 };
 
-} // FFF
+}// namespace FFF
 
 
 #endif//FANTASTICFUCKINFUSION_INTERPRETER_H

@@ -6,7 +6,9 @@
 #include <docopt/docopt.h>
 #include <range/v3/all.hpp>
 
-#include "FFF/Interpreter.h"
+#include <QGuiApplication>
+
+#include "FFF/SimulationView.h"
 
 constexpr char USAGE[] =
   R"(FFF
@@ -22,7 +24,7 @@ constexpr char USAGE[] =
       --version     Show version
 )";
 
-int main(int argc, const char** argv)
+int main(int argc, char* argv[])
 {
   std::map<std::string, docopt::value> args = docopt::docopt(USAGE,
     { argv + 1, argv + argc },
@@ -38,5 +40,7 @@ int main(int argc, const char** argv)
   for (const auto& arg : args) {
     spdlog::info("Command line argument {}: {}", arg.first, arg.second.asBool());
   }
-  return 0;
+
+  QGuiApplication app(argc, argv);
+  return app.exec();
 }

@@ -74,19 +74,20 @@ set(CONAN_EXTRA_OPTIONS
         qt:qt3d=True
         qt:qtimageformats=True
         qt:qtquick3d=True
+        qt:qtquickcontrols2=True
+        qt:qtquickcontrols=True
         qt:with_icu=False  # FIXME: gives error when compiling with C++20
         qt:with_mysql=False  # FIXME: gives error when compiling with C++20
         )
 
 include(cmake/Conan.cmake)
-find_package(Qt5 REQUIRED COMPONENTS Core Gui Widgets 3DCore 3DExtras 3DRender 3DInput)
+find_package(Qt5 COMPONENTS Core Gui Widgets Qml 3DCore 3DExtras 3DRender 3DInput REQUIRED)
 set(QT_NO_BEARERMANAGEMENT ON)
 set(CMAKE_AUTOMOC ON)
 set(CMAKE_AUTORCC ON)
 set(CMAKE_AUTOUIC ON)
 
 run_conan()
-
 
 if(ENABLE_TESTING)
     enable_testing()
@@ -99,6 +100,13 @@ if(ENABLE_FUZZING)
     add_subdirectory(fuzz_test)
 endif()
 
+# Build the standalone FFF viewer
+option(ENABLE_STANDALONE "Create a standalone instance" ON)
+if(ENABLE_STANDALONE)
+    message("Building FFF standalone program")
+    add_subdirectory(FFF)
+endif()
+
 # DEFINE BINARY AND LIBS PATHS ACCORDING TO GNU STANDARDS
 include(GNUInstallDirs)
 set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY
@@ -109,36 +117,54 @@ set(CMAKE_RUNTIME_OUTPUT_DIRECTORY
         ${CMAKE_BINARY_DIR}/${CMAKE_INSTALL_BINDIR})
 
 set(SRC_FILES
-        src/Interpreter.cpp)
+        src/Interpreter.cpp
+        src/SimulationView.cpp)
 
 set(HDR_FILES
-        include/FFF/Interpreter.h)
+        include/FFF/Interpreter.h
+        include/FFF/SimulationView.h)
 
-add_library(FantasticFuckinFusion SHARED ${SRC_FILES} ${HDR_FILES})
-target_link_libraries(FantasticFuckinFusion PRIVATE project_options project_warnings)
+add_library(FantasticFuckinFusion STATIC ${SRC_FILES} ${HDR_FILES})
+
+
+target_link_libraries(FantasticFuckinFusion
+        PRIVATE
+            project_options
+            project_warnings)
+
+target_compile_definitions(FantasticFuckinFusion
+        PRIVATE
+            ${CONAN_COMPILE_DEFINITIONS_QT})
+
+target_compile_options(FantasticFuckinFusion
+        PRIVATE
+            -fPIC)
+#
+#target_include_directories(FantasticFuckinFusion
+#        PUBLIC
+#            ${CONAN_INCLUDE_DIRS_QT})
+
+target_link_libraries(FantasticFuckinFusion
+        PRIVATE
+            CONAN_PKG::spdlog
+            CONAN_PKG::projectchrono
+            CONAN_PKG::qt
+            Qt::Core
+            Qt::Gui
+            Qt::Widgets
+            Qt::3DCore
+            Qt::3DExtras
+            Qt::3DRender
+            Qt::3DInput
+        )
+
+qt_import_plugins(FantasticFuckinFusion
+        INCLUDE
+            Qt::QTiffPlugin
+            Qt::QGifPlugin
+            Qt::QJpegPlugin)
 
 target_include_directories(FantasticFuckinFusion PUBLIC
         $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
         $<INSTALL_INTERFACE:include>
         PRIVATE src)
-
-option(ENABLE_STANDALONE "Create a standalone instance" ON)
-if(ENABLE_STANDALONE)
-    message("Building FFF standalone program")
-    add_subdirectory(FFF)
-endif()
-
-# 'make install' to the correct locations (provided by GNUInstallDirs).
-install(TARGETS FantasticFuckinFusion EXPORT FantasticFuckinFusionConfig
-        ARCHIVE DESTINATION ${CMAKE_INSTALL_LIBDIR}
-        LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}
-        RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR})  # This is for Windows
-install(DIRECTORY include/ DESTINATION ${CMAKE_INSTALL_INCLUDEDIR})
-
-# This makes the project importable from the install directory
-# Put config file in per-project dir (name MUST match), can also
-# just go into 'cmake'.
-install(EXPORT FantasticFuckinFusionConfig DESTINATION share/piv_extrusion/cmake)
-
-# This makes the project importable from the build directory
-export(TARGETS FantasticFuckinFusion FILE FantasticFuckinFusionConfig.cmake)

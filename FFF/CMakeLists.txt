@@ -1,24 +1,31 @@
 add_executable(FFF main.cpp)
 
-target_compile_definitions(
-        FFF
+target_compile_definitions(FFF
         PRIVATE
-        ${CONAN_COMPILE_DEFINITIONS_QT})
+            ${CONAN_COMPILE_DEFINITIONS_QT})
 
-target_include_directories(
-        FFF
+target_compile_options(FFF
         PRIVATE
-        ${CONAN_INCLUDE_DIRS_SPDLOG}
-        ${CONAN_INCLUDE_DIRS_DOCOPT.CPP}
-        ${CONAN_INCLUDE_DIRS_RANGE-V3})
+            -fPIC)
 
-target_link_libraries(
-        FFF
+target_link_libraries(FFF
         PRIVATE
-        FantasticFuckinFusion
-        CONAN_PKG::spdlog
-        CONAN_PKG::docopt.cpp
-        CONAN_PKG::range-v3
-        project_options
-        project_warnings)
+            project_options
+            project_warnings)
+
+target_link_libraries(FFF
+        PRIVATE
+            FantasticFuckinFusion
+            CONAN_PKG::spdlog
+            CONAN_PKG::docopt.cpp
+            CONAN_PKG::range-v3
+            CONAN_PKG::qt
+            Qt::Core
+            Qt::Gui
+            Qt::Widgets
+            Qt::3DCore
+            Qt::3DExtras
+            Qt::3DRender
+            Qt::3DInput
+        )
 
