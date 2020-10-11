@@ -6,6 +6,8 @@
 #include <docopt/docopt.h>
 #include <range/v3/all.hpp>
 
+#include "FFF/Interpreter.h"
+
 constexpr char USAGE[] =
   R"(FFF
 

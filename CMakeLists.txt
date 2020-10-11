@@ -99,10 +99,46 @@ if(ENABLE_FUZZING)
     add_subdirectory(fuzz_test)
 endif()
 
-add_subdirectory(src)
+# DEFINE BINARY AND LIBS PATHS ACCORDING TO GNU STANDARDS
+include(GNUInstallDirs)
+set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY
+        ${CMAKE_BINARY_DIR}/${CMAKE_INSTALL_LIBDIR})
+set(CMAKE_LIBRARY_OUTPUT_DIRECTORY
+        ${CMAKE_BINARY_DIR}/${CMAKE_INSTALL_LIBDIR})
+set(CMAKE_RUNTIME_OUTPUT_DIRECTORY
+        ${CMAKE_BINARY_DIR}/${CMAKE_INSTALL_BINDIR})
+
+set(SRC_FILES
+        src/Interpreter.cpp)
+
+set(HDR_FILES
+        include/FFF/Interpreter.h)
+
+add_library(FantasticFuckinFusion SHARED ${SRC_FILES} ${HDR_FILES})
+target_link_libraries(FantasticFuckinFusion PRIVATE project_options project_warnings)
+
+target_include_directories(FantasticFuckinFusion PUBLIC
+        $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
+        $<INSTALL_INTERFACE:include>
+        PRIVATE src)
 
 option(ENABLE_STANDALONE "Create a standalone instance" ON)
 if(ENABLE_STANDALONE)
     message("Building FFF standalone program")
     add_subdirectory(FFF)
 endif()
+
+# 'make install' to the correct locations (provided by GNUInstallDirs).
+install(TARGETS FantasticFuckinFusion EXPORT FantasticFuckinFusionConfig
+        ARCHIVE DESTINATION ${CMAKE_INSTALL_LIBDIR}
+        LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}
+        RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR})  # This is for Windows
+install(DIRECTORY include/ DESTINATION ${CMAKE_INSTALL_INCLUDEDIR})
+
+# This makes the project importable from the install directory
+# Put config file in per-project dir (name MUST match), can also
+# just go into 'cmake'.
+install(EXPORT FantasticFuckinFusionConfig DESTINATION share/piv_extrusion/cmake)
+
+# This makes the project importable from the build directory
+export(TARGETS FantasticFuckinFusion FILE FantasticFuckinFusionConfig.cmake)
